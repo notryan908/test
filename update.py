@@ -397,6 +397,15 @@ class Page3_Automation(BasePage):
                                               style='Resume.TButton') # Custom style for resume button
         self.resume_script_button.pack(pady=10)
 
+        self.connect_wifi_button = ttk.Button(
+            page_frame,
+            text="Connect PC to Wi-Fi",
+            command=self._connect_wifi_step3,
+            width=30,
+            style='Accent.TButton'
+        )
+        self.connect_wifi_button.pack(pady=10)
+
         # Use the standard navigation setup, pointing "Next" to Page 4
         self.setup_navigation_buttons(prev_page_class=Page2_DeviceSetup, next_page_class=Page4_Cleanup)
         # Initially disable the 'Next' button until automation is complete
@@ -415,6 +424,12 @@ class Page3_Automation(BasePage):
             return
 
         self.controller.start_automation(target_device_wifi_ssid, target_device_wifi_password)
+
+    def _connect_wifi_step3(self):
+        page2 = self.controller.frames["Page2_DeviceSetup"]
+        ssid = page2.target_device_wifi_ssid_entry.get().strip()
+        password = page2.target_device_wifi_password_entry.get().strip()
+        self.controller.connect_pc_to_wifi(ssid, password)
 
     def enable_resume_button(self):
         """Enables the resume button and disables start button."""
